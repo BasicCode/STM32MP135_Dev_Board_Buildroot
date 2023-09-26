@@ -1,0 +1,4 @@
+config BR2_PACKAGE_ESP8089
+       bool "esp8089"
+       help
+               Linux kernel module for the ESP8089 WiFi chipset. (https://github.com/al177/esp8089)

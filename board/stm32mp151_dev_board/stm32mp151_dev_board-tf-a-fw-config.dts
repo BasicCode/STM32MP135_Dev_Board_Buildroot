@@ -1,0 +1,7 @@
+/*
+ * STM32MP151 Dev Board
+ *
+ * By BasicCode
+ */
+#define DDR_SIZE	0x10000000 /* 256MB */
+#include "stm32mp15-fw-config.dtsi"
