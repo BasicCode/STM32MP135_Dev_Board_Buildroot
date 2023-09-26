@@ -1,1 +1,1 @@
-include $(sort $(wildcard $(BR2_EXTERNAL_STM32MP151_Dev_Board_Buildroot_PATH)/package/*/*.mk))
+include $(sort $(wildcard $(BR2_EXTERNAL_STM32MP135_Dev_Board_Buildroot_PATH)/package/*/*.mk))

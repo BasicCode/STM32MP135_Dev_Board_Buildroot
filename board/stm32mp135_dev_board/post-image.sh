@@ -7,7 +7,7 @@ main()
 	local GENIMAGE_TMP="${BUILD_DIR}/genimage.tmp"
 
 	sed -e "s/%ATFBIN%/${ATFBIN}/" \
-		${BR2_EXTERNAL_STM32MP151_Dev_Board_Buildroot_PATH}/board/stm32mp151_dev_board/genimage.cfg.template > ${GENIMAGE_CFG}
+		${BR2_EXTERNAL_STM32MP135_Dev_Board_Buildroot_PATH}/board/stm32mp135_dev_board/genimage.cfg.template > ${GENIMAGE_CFG}
 
 	support/scripts/genimage.sh -c ${GENIMAGE_CFG}
 
