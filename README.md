@@ -1,4 +1,8 @@
-# STM32MP151 Dev Board Buildroot
+# STM32MP135 Dev Board Buildroot
+  
+TODO: This document carried over from the old board. Updatre it.
+  
+
 A Buildroot external tree for a custom PCB based on an [MYiR SoM](https://www.myirtech.com/list.asp?id=658). This project, along with the PCB design below, were an educational experience to learn the Buildroot system, Linux kernel, and a bit of PCB design. It currently boots to Linux 6.3 with a minimal collection of packages, and has a demo of [LVGL](https://github.com/lvgl/lv_port_linux_frame_buffer) using the framebuffer.
 * [PCB Design Files](https://github.com/BasicCode/STM32MP151_Dev_Board_PCB)
   
