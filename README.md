@@ -37,6 +37,8 @@ stm32mp135_dev_board.dtb
   
 (Note: Make sure to add this line under the appropriate IF statement in the Makefile.)
 
+* There are some missing **dt-bindings** files in the mainline source for both *u-boot*, and *linux* which are included here (in the directory with the device tree files). You'll need to copy them across to their respective directories after attempting to build the first time. Hopefully the files get updated soon in Linux and U-Boot. Alternatively you can direct Buildroot to use the STM Linux and U-Boot repositories where these files came from.
+
 ### The Overlay Folder
 There are a few config files in the overlay file for either quality of life, or to make things actually work. Most are optional depending, or may even conflict with your desired settings.
 * **\boot\extlinux.conf** - Required to boot linux. U-Boot will look for this.
@@ -63,3 +65,5 @@ Where the *u-boot.bin*, and *u-boot.dtb* files are found in the *buildroot/outpu
  2. ```make uboot-rebuild```
  3. ```make arm-trusted-firmware-rebuild```
  4. Finally; ```make``` to generate the image.
+
+* I had to install *libssl-dev* for the OpenSSL Headers in order to build ATF.
