@@ -259,6 +259,29 @@
 				 <STM32_PINMUX('H', 7, ANALOG)>; /* I2C3_SDA */
 		};
 	};
+
+	spi5_pins_mx: spi5-1 {
+		pins1 {
+			pinmux = <STM32_PINMUX('G', 10, AF5)>, /* SPI4_SCK */
+				<STM32_PINMUX('H', 12, AF5)>; /* SPI4_MOSI */
+			bias-disable;
+			drive-push-pull;
+			slew-rate = <1>;
+		};
+
+		pins2 {
+			pinmux = <STM32_PINMUX('G', 8, AF5)>; /* SPI4_MISO */
+			bias-disable;
+		};
+	};
+
+	spi5_sleep_pins_mx: spi5-sleep-1 {
+		pins {
+			pinmux = <STM32_PINMUX('G', 10, ANALOG)>, /* SPI4_SCK */
+				<STM32_PINMUX('G', 8, ANALOG)>, /* SPI4_MISO */
+				<STM32_PINMUX('H', 12, ANALOG)>; /* SPI4_MOSI */
+		};
+	};
 };
 
 &bsec{
@@ -327,8 +350,8 @@
 
 &ltdc{
 	pinctrl-names = "default", "sleep";
-	pinctrl-0 = <&ltdc_pins_a>;
-	pinctrl-1 = <&ltdc_sleep_pins_a>;
+	pinctrl-0 = <&ltdc_pins_mx>;
+	pinctrl-1 = <&ltdc_sleep_pins_mx>;
 	status = "okay";
 
 	/* USER CODE BEGIN ltdc */
@@ -386,6 +409,23 @@
 	/delete-property/ dmas;
 	/delete-property/ dma-names;
 	/* USER CODE END uart4 */
+};
+
+&spi5 {
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&spi5_pins_mx>;
+	pinctrl-1 = <&spi5_sleep_pins_mx>;
+	cs-gpios= <&gpioe 8 GPIO_ACTIVE_LOW>; //PE8 = CS for WiFi
+	status = "okay";
+
+	wfx@0 {
+		compatible = "silabs,wf200";
+		interrupts-extended = <&gpioi 0 IRQ_TYPE_EDGE_RISING>;
+		//wakeup-gpios = <&gpioe 10 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpioc 13 GPIO_ACTIVE_LOW>;
+		reg = <0>; //CS index 0 (see above)
+		spi-max-frequency = <20000000>;
+	};
 };
 
 /*
