@@ -172,21 +172,13 @@
 		};
 	};
 
-	/*
-	* LP_CLK PWM signal
-	*/
-	pwmleds {
-		compatible = "pwm-leds";
-		lpclk {
-			label = "lpclk";
-			pwms = <&pwm1 0 30518 0>; // period in nanoseconds (30518 = 1 / 32.768 kHz), normal polarity (0)
-			max-brightness = <127>; //50% duty
-		};
-	};
-
 	led{
 		compatible = "gpio-leds";
 
+		/*
+		 * The Wifi_UP pin must be held HIGH for the chip to turn on,
+		 * even when power saving is disableld.
+		 */
 		wifi_up{
 			label = "wifi_up";
 			gpios = <&gpioe 10 GPIO_ACTIVE_HIGH>;
@@ -472,22 +464,6 @@
 		reset-gpios = <&gpioc 13 GPIO_ACTIVE_LOW>;
 		reg = <0>; //CS index 0 (see above)
 		spi-max-frequency = <42000000>;
-	};
-};
-
-/*
- * PWM for LP_CLK for WiFi
- */
-&timers2 {
-	status = "okay";
-	// spare all DMA channels since they are not needed for PWM output
-	/delete-property/dmas;
-	/delete-property/dma-names;
-	pwm1: pwm {
-		pinctrl-0 = <&pwm1_pins_mx>;
-		pinctrl-1 = <&pwm1_sleep_pins_mx>;
-		pinctrl-names = "default", "sleep";
-		status = "okay";
 	};
 };
 
