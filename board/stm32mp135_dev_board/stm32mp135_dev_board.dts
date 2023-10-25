@@ -21,6 +21,7 @@
 #include <dt-bindings/leds/common.h>
 #include <dt-bindings/regulator/st,stm32mp13-regulator.h>
 #include <dt-bindings/rtc/rtc-stm32.h>
+#include <dt-bindings/interrupt-controller/irq.h>
 /* USER CODE END includes */
 
 / {
@@ -171,6 +172,28 @@
 		};
 	};
 
+	/*
+	* LP_CLK PWM signal
+	*/
+	pwmleds {
+		compatible = "pwm-leds";
+		lpclk {
+			label = "lpclk";
+			pwms = <&pwm1 0 30518 0>; // period in nanoseconds (30518 = 1 / 32.768 kHz), normal polarity (0)
+			max-brightness = <127>; //50% duty
+		};
+	};
+
+	led{
+		compatible = "gpio-leds";
+
+		wifi_up{
+			label = "wifi_up";
+			gpios = <&gpioe 10 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
+	};
+
 }; /*root*/
 
 &pinctrl {
@@ -280,6 +303,24 @@
 			pinmux = <STM32_PINMUX('G', 10, ANALOG)>, /* SPI4_SCK */
 				<STM32_PINMUX('G', 8, ANALOG)>, /* SPI4_MISO */
 				<STM32_PINMUX('H', 12, ANALOG)>; /* SPI4_MOSI */
+		};
+	};
+
+	/*
+	 * PWM for LP_CLK for WiFi
+	 */
+	pwm1_pins_mx: pwm1-0 {
+		pins {
+			pinmux = <STM32_PINMUX('B', 10, AF1)>;
+			bias-pull-down;
+			drive-push-pull;
+			slew-rate = <0>;
+		};
+	};
+
+	pwm1_sleep_pins_mx: pwm1-sleep-0 {
+		pins {
+			pinmux = <STM32_PINMUX('B', 10, ANALOG)>;
 		};
 	};
 };
@@ -398,6 +439,9 @@
 	vmmc-supply = <&v3v3_ao>;
 };
 
+/*
+ * Console
+ */
 &uart4{
 	pinctrl-names = "default", "idle", "sleep";
 	pinctrl-0 = <&uart4_pins_a>;
@@ -411,6 +455,9 @@
 	/* USER CODE END uart4 */
 };
 
+/*
+ * WiFi
+ */
 &spi5 {
 	pinctrl-names = "default", "sleep";
 	pinctrl-0 = <&spi5_pins_mx>;
@@ -418,13 +465,29 @@
 	cs-gpios= <&gpioe 8 GPIO_ACTIVE_LOW>; //PE8 = CS for WiFi
 	status = "okay";
 
-	wfx@0 {
+	wifi@0 {
 		compatible = "silabs,wf200";
 		interrupts-extended = <&gpioi 0 IRQ_TYPE_EDGE_RISING>;
-		//wakeup-gpios = <&gpioe 10 GPIO_ACTIVE_HIGH>;
+		//wakeup-gpios = <&gpioe 10 (GPIO_ACTIVE_LOW)>;
 		reset-gpios = <&gpioc 13 GPIO_ACTIVE_LOW>;
 		reg = <0>; //CS index 0 (see above)
-		spi-max-frequency = <20000000>;
+		spi-max-frequency = <42000000>;
+	};
+};
+
+/*
+ * PWM for LP_CLK for WiFi
+ */
+&timers2 {
+	status = "okay";
+	// spare all DMA channels since they are not needed for PWM output
+	/delete-property/dmas;
+	/delete-property/dma-names;
+	pwm1: pwm {
+		pinctrl-0 = <&pwm1_pins_mx>;
+		pinctrl-1 = <&pwm1_sleep_pins_mx>;
+		pinctrl-names = "default", "sleep";
+		status = "okay";
 	};
 };
 
