@@ -5,11 +5,11 @@ A Buildroot external tree for a custom PCB based on an [MYiR SoM](https://www.my
 TODO: Add PCB Design Files
 
 ## Current State
-The build is very similar to the mainline STM32MP157c-DK2 device tree however there are some minor changes due to the pinout of the SoM, and the RAM configuration. Not all of module-specific pinouts have been implemented yet.
-* Uses Linux kernel 6.3
-* Uses U-Boot 2023.07
+
+* Uses Linux kernel 6.1 (from STM)
+* Uses U-Boot 2023.07 (from STM)
 * Tested with Buildroot 2023.05
-* ARM Trusted Firmware 2.9 with *opteeos* for BL32.
+* ARM Trusted Firmware 2.8 with *opteeos* for BL32. (from STM)
 * Uses mainline STM32 dtsi where possible, however some of the dt-bindings for the STM32MP135 have not made it to the mainline u-boot and Linux source yet. The missing and incomplete files have been included here and should be removed when they are no longer needed.
 * Custom dts and dtsi are included for board specific changes. Not all of the SoM specific pinouts are reflected in the files.
 * Includes a file system overlay with some configuration, but ```boot/extlinux.conf``` is the only file which is actually required.
@@ -28,22 +28,12 @@ BR2_EXTERNAL=../STM32MP135_Dev_Board_Buildroot make stm32mp135_dev_board_defconf
 * Use **dd**, **Rufus**, or your software of choice to image an SD card with the *output/images/sdcard.img* file.
 
 ## Issues
-There are so many! But some big ones:
-* U-Boot does not include the custom DTB file in the Makefile when building for the first time. If you get errors about the dtb not being correctly specified, manually adding the dtb filename to the file *buildroot/output/build/uboot-2023.04/arch/arm/dts/Makefile*:
-  
-```
-stm32mp135_dev_board.dtb
-```
-  
-(Note: Make sure to add this line under the appropriate IF statement in the Makefile.)
-
-* There are some missing **dt-bindings** files in the mainline source for both *u-boot*, and *linux* which are included here (in the directory with the device tree files). You'll need to copy them across to their respective directories after attempting to build the first time. Hopefully the files get updated soon in Linux and U-Boot. Alternatively you can direct Buildroot to use the STM Linux and U-Boot repositories where these files came from.
+* After an initial build, you will need to modify / replace the *conf.mk* file in *output/build/optee-os-custom/core/arch/arm/plat-stm32mp1* to support 256MB RAM. A replacement file is included (*conf.mk.new*). Further information on the process is described by STM [here](https://wiki.stmicroelectronics.cn/stm32mpu/wiki/How_to_configure_a_256MB_DDR_mapping_from_STM32_MPU_Distribution_Package): 
 
 ### The Overlay Folder
 There are a few config files in the overlay file for either quality of life, or to make things actually work. Most are optional depending, or may even conflict with your desired settings.
 * **\boot\extlinux.conf** - Required to boot linux. U-Boot will look for this.
 * **\etc\init.d\S40xorg** - A dummy file to overwrite a default which is creatred when Xorg compiles. I don't want Xorg to start on boot.
-* **\etc\modprobe.d\esp.conf** - Config file telling the esp8089 driver which GPIO to use for reset. Since the driver doesn't work anyway, this will probably be removed.
 * **\etc\opkg\distfeeds.conf** - Contains OpenWRT package feed. Need to force it to search the correct architecture when using opkg.
 * **\etc\wpa_supplicant\wpa_cupplicant.conf** - A blank *wpa_supplicant* configuration to fill out.
 * **\etc\X11\xorg.conf** - Sometimes the default are bad, sometimes they aren't.
@@ -61,9 +51,10 @@ fiptool create --tos-fw bl32.bin --fw-config fdts/stm32mp135_dev_board-tf-a-fw-c
 Where the *u-boot.bin*, and *u-boot.dtb* files are found in the *buildroot/output/build/uboot* directory.
 
 * Remember that the FIP package contains the second stage bootloader, and loads the U-Boot DTB file. So if you modify the device tree you will need to manually rebuild U-Boot, **and** ARM Trusted Firmware, and probably the Linux kernel as well depending on your changes. 
- 1. ```make linux-rebuild```
- 2. ```make uboot-rebuild```
- 3. ```make arm-trusted-firmware-rebuild```
- 4. Finally; ```make``` to generate the image.
+ 1. ```make optee-os-rebuild```
+ 2. ```make linux-rebuild```
+ 3. ```make uboot-rebuild```
+ 4. ```make arm-trusted-firmware-rebuild```
+ 5. Finally; ```make``` to generate the image.
 
 * I had to install *libssl-dev* for the OpenSSL Headers in order to build ATF.
