@@ -28,7 +28,12 @@ BR2_EXTERNAL=../STM32MP135_Dev_Board_Buildroot make stm32mp135_dev_board_defconf
 * Use **dd**, **Rufus**, or your software of choice to image an SD card with the *output/images/sdcard.img* file.
 
 ## Issues
-* After an initial build, you will need to modify / replace the *conf.mk* file in *output/build/optee-os-custom/core/arch/arm/plat-stm32mp1* to support 256MB RAM. A replacement file is included (*conf.mk.new*). Further information on the process is described by STM [here](https://wiki.stmicroelectronics.cn/stm32mpu/wiki/How_to_configure_a_256MB_DDR_mapping_from_STM32_MPU_Distribution_Package): 
+* After an initial build, you will get errors about Optee Header location:
+```
+WARNING: The load address in optee header 0xce000000 - 0xce081310 is not in reserved area: 0xce200000 - 0xd0000000.
+ERROR:   OPTEE header parse error.
+```
+Modify / replace the *conf.mk* file in *output/build/optee-os-custom/core/arch/arm/plat-stm32mp1* to support 256MB RAM. A replacement file is included (*conf.mk.new*). Further information on the process is described by STM [here](https://wiki.stmicroelectronics.cn/stm32mpu/wiki/How_to_configure_a_256MB_DDR_mapping_from_STM32_MPU_Distribution_Package): 
 
 ### The Overlay Folder
 There are a few config files in the overlay file for either quality of life, or to make things actually work. Most are optional depending, or may even conflict with your desired settings.
