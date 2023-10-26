@@ -186,6 +186,46 @@
 		};
 	};
 
+	sound {
+		compatible = "audio-graph-card";
+		label = "STM32MP13-Test";
+		routing =
+			"Playback" , "DAC";
+		dais = <&i2s1_port>;
+		status = "okay";
+	};
+
+/*
+sound {
+        compatible = "simple-audio-card";
+        simple-audio-card,name = "pcm3060-audio";
+        simple-audio-card,format = "i2s";
+        simple-audio-card,bitclock-master = <&dai_codec>;
+        simple-audio-card,frame-master = <&dai_codec>;
+
+        simple-audio-card,widgets =
+                "Line", "Balanced In",
+                "Line", "Balanced Out",
+                "Line", "Unbalanced Out",
+                "Line", "Unbalanced In";
+
+        simple-audio-card,routing =
+                "INL", "Balanced In",
+                "INR", "Unbalanced In",
+                "Balanced Out", "OUTL",
+                "Unbalanced Out", "OUTR";
+
+        dai_cpu: simple-audio-card,cpu {
+                sound-dai = <&i2s1_port>;
+        };
+
+        dai_codec: simple-audio-card,codec {
+                sound-dai = <&pcm3060_endpoint>;
+                clocks = <&i2s1>;
+        };
+	};
+*/
+
 }; /*root*/
 
 &pinctrl {
@@ -299,20 +339,25 @@
 	};
 
 	/*
-	 * PWM for LP_CLK for WiFi
+	 * Audio
 	 */
-	pwm1_pins_mx: pwm1-0 {
+	i2s1_pins_mx: i2s1-0 {
 		pins {
-			pinmux = <STM32_PINMUX('B', 10, AF1)>;
-			bias-pull-down;
-			drive-push-pull;
-			slew-rate = <0>;
+			pinmux = <STM32_PINMUX('C', 0, AF5)>, // I2S1_MCLK
+				//<STM32_PINMUX('A', 6, AF5)>, // I2S1_SDI
+				<STM32_PINMUX('A', 3, AF5)>, // I2S1_SDO
+				<STM32_PINMUX('C', 3, AF6)>, // I2S1_CK
+				<STM32_PINMUX('A', 4, AF5)>; //I2S1_WS
 		};
 	};
-
-	pwm1_sleep_pins_mx: pwm1-sleep-0 {
+	
+	i2s1_sleep_pins_mx: i2s1-sleep-0 {
 		pins {
-			pinmux = <STM32_PINMUX('B', 10, ANALOG)>;
+			pinmux = <STM32_PINMUX('C', 0, ANALOG)>, // I2S1_MCLK
+				//<STM32_PINMUX('A', 6, ANALOG)>, // I2S1_SDI
+				<STM32_PINMUX('A', 3, ANALOG)>, // I2S1_SDO
+				<STM32_PINMUX('C', 3, ANALOG)>, // I2S1_CK
+				<STM32_PINMUX('A', 4, ANALOG)>; //I2S1_WS
 		};
 	};
 };
@@ -379,6 +424,51 @@
 	clock-frequency = <1000000>;
 	/delete-property/ dmas;
 	/delete-property/ dma-names;
+
+	/*
+	 * Audio
+	*/
+	pcm3060: pcm3060@46 {
+		compatible = "ti,pcm3060";
+		reg = <0x46>;
+		clocks = <&i2s1>;     // The codec is a consumer of I2S1 master clock
+		clock-names = "MCLK"; // Feed MCLK codec clock with I2S1 master clock provider
+		ti,out-single-ended = "true";
+		#sound-dai-cells = <0>;
+		status = "okay";
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				pcm3060_endpoint: endpoint {
+					remote-endpoint = <&i2s1_endpoint>;
+					frame-master;    // Set codec as master of SAI2A for FS clock.
+					bitclock-master; // Set codec as master of SAI2A for SCK clock.
+				};
+			};
+		};
+	};
+};
+
+&i2s1 {
+	clocks = <&rcc SPI1>, <&rcc SPI1_K>, <&scmi_clk CK_SCMI_PLL3_Q>, <&scmi_clk CK_SCMI_PLL3_R>;
+	clock-names = "pclk", "i2sclk", "x8k", "x11k";
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&i2s1_pins_mx>;
+	pinctrl-1 = <&i2s1_sleep_pins_mx>;
+	#clock-cells = <0>; // Set I2S1 as master clock provider
+	status = "okay";
+
+	i2s1_port: port {
+		i2s1_endpoint: endpoint {
+			remote-endpoint = <&pcm3060_endpoint>;
+			format = "i2s";
+			mclk-fs = <256>;
+		};
+	};
 };
 
 &ltdc{
