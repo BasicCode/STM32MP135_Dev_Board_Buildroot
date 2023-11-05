@@ -185,46 +185,36 @@
 			default-state = "on";
 		};
 	};
-
+/*
 	sound {
 		compatible = "audio-graph-card";
 		label = "STM32MP13-Test";
-		routing =
-			"Playback" , "DAC";
+		routing = "Playback", "DAC";
 		dais = <&i2s1_port>;
 		status = "okay";
 	};
-
-/*
-sound {
-        compatible = "simple-audio-card";
-        simple-audio-card,name = "pcm3060-audio";
-        simple-audio-card,format = "i2s";
-        simple-audio-card,bitclock-master = <&dai_codec>;
-        simple-audio-card,frame-master = <&dai_codec>;
-
-        simple-audio-card,widgets =
-                "Line", "Balanced In",
-                "Line", "Balanced Out",
-                "Line", "Unbalanced Out",
-                "Line", "Unbalanced In";
-
-        simple-audio-card,routing =
-                "INL", "Balanced In",
-                "INR", "Unbalanced In",
-                "Balanced Out", "OUTL",
-                "Unbalanced Out", "OUTR";
-
-        dai_cpu: simple-audio-card,cpu {
-                sound-dai = <&i2s1_port>;
-        };
-
-        dai_codec: simple-audio-card,codec {
-                sound-dai = <&pcm3060_endpoint>;
-                clocks = <&i2s1>;
-        };
-	};
 */
+
+	sound {
+		compatible = "simple-audio-card";
+		simple-audio-card,name = "Sound Card";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,mclk-fs = <256>;
+		status = "okay";
+		simple-audio-card,routing = 
+			"Playback", "DAC";
+		simple-audio-card,widgets =
+			"Headphone", "Headphone Jack";
+
+		simple-audio-card,cpu {
+			sound-dai = <&i2s1>;
+		};
+
+		simple-audio-card,codec {
+			sound-dai = <&pcm3060>;
+			clocks = <&i2s1>;
+		};
+	};
 
 }; /*root*/
 
@@ -348,6 +338,9 @@ sound {
 				<STM32_PINMUX('A', 3, AF5)>, // I2S1_SDO
 				<STM32_PINMUX('C', 3, AF6)>, // I2S1_CK
 				<STM32_PINMUX('A', 4, AF5)>; //I2S1_WS
+			bias-disable;
+			drive-push-pull;
+			slew-rate = <1>;
 		};
 	};
 	
@@ -421,7 +414,7 @@ sound {
 	status = "okay";
 	i2c-scl-rising-time-ns = <96>;
 	i2c-scl-falling-time-ns = <3>;
-	clock-frequency = <1000000>;
+	clock-frequency = <400000>;
 	/delete-property/ dmas;
 	/delete-property/ dma-names;
 
@@ -445,8 +438,6 @@ sound {
 				reg = <0>;
 				pcm3060_endpoint: endpoint {
 					remote-endpoint = <&i2s1_endpoint>;
-					frame-master;    // Set codec as master of SAI2A for FS clock.
-					bitclock-master; // Set codec as master of SAI2A for SCK clock.
 				};
 			};
 		};
@@ -460,11 +451,18 @@ sound {
 	pinctrl-0 = <&i2s1_pins_mx>;
 	pinctrl-1 = <&i2s1_sleep_pins_mx>;
 	#clock-cells = <0>; // Set I2S1 as master clock provider
+	#sound-dai-cells = <0>;
 	status = "okay";
 
 	i2s1_port: port {
+		#address-cells = <1>;
+        #size-cells = <0>;
+		
 		i2s1_endpoint: endpoint {
 			remote-endpoint = <&pcm3060_endpoint>;
+			system-clock-direction-out;
+			frame-master;
+			bitclock-master;
 			format = "i2s";
 			mclk-fs = <256>;
 		};
