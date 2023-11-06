@@ -33,18 +33,20 @@ BR2_EXTERNAL=../STM32MP135_Dev_Board_Buildroot make stm32mp135_dev_board_defconf
 WARNING: The load address in optee header 0xce000000 - 0xce081310 is not in reserved area: 0xce200000 - 0xd0000000.
 ERROR:   OPTEE header parse error.
 ```
-Modify / replace the *conf.mk* file in *output/build/optee-os-custom/core/arch/arm/plat-stm32mp1* to support 256MB RAM. A replacement file is included (*conf.mk.new*). Further information on the process is described by STM [here](https://wiki.stmicroelectronics.cn/stm32mpu/wiki/How_to_configure_a_256MB_DDR_mapping_from_STM32_MPU_Distribution_Package): 
+Modify / replace the *conf.mk* file in *output/build/optee-os-custom/core/arch/arm/plat-stm32mp1* to support 256MB RAM. A replacement file is included (*conf.mk.new*). Further information on the process is described by STM [here](https://wiki.stmicroelectronics.cn/stm32mpu/wiki/How_to_configure_a_256MB_DDR_mapping_from_STM32_MPU_Distribution_Package).
+  
+* There is a problem with the PCM3060 driver reporting which format the codec supports. Although it seems to be correct, it doesn't seem to work. As a workaround modify the file *linux-custom/sound/soc/codecs/pcm3060.c* on line 191 change the *.format* to ```SNDRV_PCM_FMTBIT_S32_LE```. TODO: Create a patch file for this.
 
 ### The Overlay Folder
 There are a few config files in the overlay file for either quality of life, or to make things actually work. Most are optional depending, or may even conflict with your desired settings.
-* **\boot\extlinux.conf** - Required to boot linux. U-Boot will look for this.
-* **\etc\init.d\S40xorg** - A dummy file to overwrite a default which is creatred when Xorg compiles. I don't want Xorg to start on boot.
-* **\etc\opkg\distfeeds.conf** - Contains OpenWRT package feed. Need to force it to search the correct architecture when using opkg.
-* **\etc\wpa_supplicant\wpa_cupplicant.conf** - A blank *wpa_supplicant* configuration to fill out.
-* **\etc\X11\xorg.conf** - Sometimes the default are bad, sometimes they aren't.
-* **\etc\directfbrc** - DirectFB config file because it doesn't seem to use FBDev by default, even though it says it does.
-* **\lib\firmwmare** - Firmware files for some wifi cards.
-* **\root** - Just some extra files for testing and playing with.
+* **/boot/extlinux.conf** - Required to boot linux. U-Boot will look for this.
+* **/etc/init.d/S40xorg** - A dummy file to overwrite a default which is creatred when Xorg compiles. I don't want Xorg to start on boot.
+* **/etc/opkg/distfeeds.conf** - Contains OpenWRT package feed. Need to force it to search the correct architecture when using opkg.
+* **/etc/wpa_supplicant/wpa_cupplicant.conf** - A blank *wpa_supplicant* configuration to fill out.
+* **/etc/X11/xorg.conf** - Sometimes the default are bad, sometimes they aren't.
+* **/etc/directfbrc** - DirectFB config file because it doesn't seem to use FBDev by default, even though it says it does.
+* **/lib/firmwmare** - Firmware files for some wifi cards.
+* **/root** - Just some extra files for testing and playing with.
 
 ## Trips and Tricks
 Some things that caught me out, or helped me out, along the way:
