@@ -1,11 +1,17 @@
 # STM32MP135 Dev Board Buildroot
   
-A Buildroot external tree for a custom PCB based on an [MYiR SoM](https://www.myirtech.com/list.asp?id=726).
+A Buildroot external tree for a custom PCB based on an [MYiR MYC-YF135-256N SoM](https://www.myirtech.com/list.asp?id=726).
   
 TODO: Add PCB Design Files
+  
+### Harwdare
+* STM32MP135DAF7 inside the [MYC-YF135-256N SoM](https://www.myirtech.com/list.asp?id=726) from MYiR Electonics running at 1GHz.
+* [Silicon Labs WF200D](https://www.silabs.com/documents/public/data-sheets/wf200-datasheet.pdf) WiFi chipset.
+* [Ti PCM3060](https://www.ti.com/lit/ds/symlink/pcm3060.pdf) audio codec.
+* 40-pin LCD, and 6-pin CTP connector compatible with [Orient Display 480x272](https://www.orientdisplay.com/pdf/AFY480272B0-4.3N12NTM-C.pdf) TFT LCD panel.
+
 
 ## Current State
-
 * Uses Linux kernel v6.1 (from STM)
 * Uses U-Boot 2023.07 (from STM)
 * Uses TF-A v2.8 (from STM)
