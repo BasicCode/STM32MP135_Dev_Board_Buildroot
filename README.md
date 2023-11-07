@@ -46,6 +46,8 @@ Modify / replace the *conf.mk* file in *output/build/optee-os-custom/core/arch/a
 44004000.audio-controller-pcm3060-dac: ASoC: pcm3060-dac <-> 44004000.audio-controller No matching formats
 ```
 As a workaround modify the file *linux-custom/sound/soc/codecs/pcm3060.c* on line 191 change the *.format* to ```SNDRV_PCM_FMTBIT_S32_LE```. TODO: Create a patch file for this.
+  
+* TODO: The LTDC LCD output is not yet configured.
 
 ### The Overlay Folder
 There are a few config files in the overlay file for either quality of life, or to make things actually work. Most are optional depending, or may even conflict with your desired settings.
