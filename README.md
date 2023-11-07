@@ -17,7 +17,6 @@ TODO: Add PCB Design Files
 * Uses TF-A v2.8 (from STM)
 * Uses Optee-Os v3.19.0 (from STM)
 * Tested with Buildroot 2023.05
-* ARM Trusted Firmware 2.8 with *opteeos* for BL32. (from STM)
 * Uses mainline STM32 dtsi where possible, however some of the dt-bindings for the STM32MP135 have not made it to the mainline u-boot and Linux source yet. Fortunately STM provides customised TF-A, Optee, U-Boot, and Linux.
 * Includes a file system overlay with some configuration, but ```boot/extlinux.conf``` is the only file which is actually required.
 * Some other files in the **overlay** folder are just to override defaults or test features but are not strictly required. 
