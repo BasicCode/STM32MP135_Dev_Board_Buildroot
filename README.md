@@ -36,7 +36,11 @@ ERROR:   OPTEE header parse error.
 ```
 Modify / replace the *conf.mk* file in *output/build/optee-os-custom/core/arch/arm/plat-stm32mp1* to support 256MB RAM. A replacement file is included (*conf.mk.new*). Further information on the process is described by STM [here](https://wiki.stmicroelectronics.cn/stm32mpu/wiki/How_to_configure_a_256MB_DDR_mapping_from_STM32_MPU_Distribution_Package).
   
-* There is a problem with the PCM3060 driver reporting which format the codec supports. Although it seems to be correct, it doesn't seem to work. As a workaround modify the file *linux-custom/sound/soc/codecs/pcm3060.c* on line 191 change the *.format* to ```SNDRV_PCM_FMTBIT_S32_LE```. TODO: Create a patch file for this.
+* There is a problem with the PCM3060 driver reporting which format the codec supports. Although it seems to be correct, it doesn't seem to work and was giving an error:
+```
+44004000.audio-controller-pcm3060-dac: ASoC: pcm3060-dac <-> 44004000.audio-controller No matching formats
+```
+As a workaround modify the file *linux-custom/sound/soc/codecs/pcm3060.c* on line 191 change the *.format* to ```SNDRV_PCM_FMTBIT_S32_LE```. TODO: Create a patch file for this.
 
 ### The Overlay Folder
 There are a few config files in the overlay file for either quality of life, or to make things actually work. Most are optional depending, or may even conflict with your desired settings.
