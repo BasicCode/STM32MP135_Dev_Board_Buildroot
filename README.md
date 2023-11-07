@@ -6,12 +6,13 @@ TODO: Add PCB Design Files
 
 ## Current State
 
-* Uses Linux kernel 6.1 (from STM)
+* Uses Linux kernel v6.1 (from STM)
 * Uses U-Boot 2023.07 (from STM)
+* Uses TF-A v2.8 (from STM)
+* Uses Optee-Os v3.19.0 (from STM)
 * Tested with Buildroot 2023.05
 * ARM Trusted Firmware 2.8 with *opteeos* for BL32. (from STM)
-* Uses mainline STM32 dtsi where possible, however some of the dt-bindings for the STM32MP135 have not made it to the mainline u-boot and Linux source yet. The missing and incomplete files have been included here and should be removed when they are no longer needed.
-* Custom dts and dtsi are included for board specific changes. Not all of the SoM specific pinouts are reflected in the files.
+* Uses mainline STM32 dtsi where possible, however some of the dt-bindings for the STM32MP135 have not made it to the mainline u-boot and Linux source yet. Fortunately STM provides customised TF-A, Optee, U-Boot, and Linux.
 * Includes a file system overlay with some configuration, but ```boot/extlinux.conf``` is the only file which is actually required.
 * Some other files in the **overlay** folder are just to override defaults or test features but are not strictly required. 
 
@@ -28,7 +29,7 @@ BR2_EXTERNAL=../STM32MP135_Dev_Board_Buildroot make stm32mp135_dev_board_defconf
 * Use **dd**, **Rufus**, or your software of choice to image an SD card with the *output/images/sdcard.img* file.
 
 ## Issues
-* After an initial build, you will get errors about Optee Header location:
+* After an initial build, on first boot, you will get errors about Optee Header location:
 ```
 WARNING: The load address in optee header 0xce000000 - 0xce081310 is not in reserved area: 0xce200000 - 0xd0000000.
 ERROR:   OPTEE header parse error.
@@ -45,7 +46,7 @@ There are a few config files in the overlay file for either quality of life, or 
 * **/etc/wpa_supplicant/wpa_cupplicant.conf** - A blank *wpa_supplicant* configuration to fill out.
 * **/etc/X11/xorg.conf** - Sometimes the default are bad, sometimes they aren't.
 * **/etc/directfbrc** - DirectFB config file because it doesn't seem to use FBDev by default, even though it says it does.
-* **/lib/firmwmare** - Firmware files for some wifi cards.
+* **/lib/firmwmare** - Firmware files for some wifi cards. [SiliconLabs GitHub](https://github.com/SiliconLabs/wfx-firmware).
 * **/root** - Just some extra files for testing and playing with.
 
 ## Trips and Tricks
