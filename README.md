@@ -5,7 +5,10 @@ A Buildroot external tree for a custom PCB based on an [MYiR MYC-YF135-256N SoM]
 TODO: Add PCB Design Files
   
 ### Harwdare
-* STM32MP135DAF7 inside the [MYC-YF135-256N SoM](https://www.myirtech.com/list.asp?id=726) from MYiR Electonics running at 1GHz.
+* STM32MP135DAF7 inside the [MYC-YF135-256N SoM](https://www.myirtech.com/list.asp?id=726) from MYiR Electonics.
+  * 1 GHz
+  * 256MB RAM
+  * 256MB NAND (not used in this example)
 * [Silicon Labs WF200D](https://www.silabs.com/documents/public/data-sheets/wf200-datasheet.pdf) WiFi chipset.
 * [Ti PCM3060](https://www.ti.com/lit/ds/symlink/pcm3060.pdf) audio codec.
 * 40-pin LCD, and 6-pin CTP connector compatible with [Orient Display 480x272](https://www.orientdisplay.com/pdf/AFY480272B0-4.3N12NTM-C.pdf) TFT LCD panel.
