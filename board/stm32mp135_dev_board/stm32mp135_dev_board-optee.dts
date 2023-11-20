@@ -249,7 +249,7 @@
 };
 
 &gpioe {
-	st,protreg = < (TZPROT(15)) >;
+	//st,protreg = < (TZPROT(15)) >;
 };
 
 &gpioi {
@@ -275,12 +275,6 @@
 	counter {
 		status = "okay";
 	};
-};
-
-&ltdc {
-	pinctrl-names = "default";
-	pinctrl-0 = <&ltdc_pins_a>;
-	status = "okay";
 };
 
 &oem_enc_key {
@@ -568,13 +562,6 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart4_pins_a>;
 	status = "okay";
-};
-
-&usart1 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&usart1_pins_a>;
-	uart-has-rtscts;
-	status = "disabled";
 };
 
 &wakeup_pin_5 {
