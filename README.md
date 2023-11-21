@@ -82,3 +82,5 @@ Where the *u-boot.bin*, and *u-boot.dtb* files are found in the *buildroot/outpu
 * I had to install *libssl-dev* for the OpenSSL Headers in order to build ATF.
 
 * The WiFi was getting buffer errors when the SPI bus was running at 42MHz. It seems to be fine at 24MHz, it might be able to run a bit quicker but I haven't tried yet.
+
+* The **/etc/X11/xinit/xinitrc** file, by default, opens several xterm windows and starts a window manager. You may want to check and modify the last few lines of this file to suit your needs.
