@@ -171,31 +171,15 @@
 			clock-frequency = <24000000>;
 		};
 	};
-/*
-	// Orient Display 480x272
+	
+	/*
+	 * Display
+	 */
 	panel {
 		status = "okay";
-		compatible = "qiaodian,qd43003c0-40", "simple-panel";
+		//compatible = "qiaodian,qd43003c0-40", "simple-panel"; // Orient Display 480x272
+		compatible = "pda,91-00156-a0", "simple-panel"; // Orient Display 800x480
 		power-supply = <&vdd>;
-		ports {
-			#address-cells = <1>;
-			#size-cells = <0>;
-
-			port@0 {
-				reg = <0>;
-				panel_in: endpoint {
-					remote-endpoint = <&ltdc_ep0_out>;
-				};
-			};
-		};
-	};
-*/
-	// Orient Display 800x480
-	panel {
-		status = "okay";
-		compatible = "pda,91-00156-a0", "simple-panel";
-		power-supply = <&vdd>;
-		
 		ports {
 			#address-cells = <1>;
 			#size-cells = <0>;
