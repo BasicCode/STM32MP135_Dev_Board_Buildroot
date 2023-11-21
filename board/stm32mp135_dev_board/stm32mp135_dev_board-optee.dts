@@ -456,18 +456,16 @@
 	st,clk_opp {
 		/* CK_MPU clock config for MP13 */
 		st,ck_mpu {
-
-			cfg_1 {
-				hz = <650000000>;
-				st,clksrc = <CLK_MPU_PLL1P>;
-				st,pll = <&pll1_cfg1>;
-			};
-
-			cfg_2 {
-				hz = <1000000000>;
-				st,clksrc = <CLK_MPU_PLL1P>;
-				st,pll = <&pll1_cfg2>;
-			};
+ 			cfg_1 {
+ 				hz = < 1000000000 >;
+ 				st,clksrc = < CLK_MPU_PLL1P >;
+ 				st,pll = < &pll1_cfg2 >;
+ 			};
+ 			cfg_2 {
+ 				hz = < 650000000 >;
+ 				st,clksrc = < CLK_MPU_PLL1P >;
+ 				st,pll = < &pll1_cfg1 >;
+ 			};
 		};
 	};
 };

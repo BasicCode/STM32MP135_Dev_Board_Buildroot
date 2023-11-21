@@ -93,7 +93,7 @@
     vddcpu: vddcpu {
         compatible = "regulator-fixed";
         regulator-name = "vddcpu";
-        regulator-min-microvolt = <1250000>;
+        regulator-min-microvolt = <1350000>;
         regulator-max-microvolt = <1350000>;
         regulator-always-on;
     };
@@ -101,7 +101,7 @@
     vdd_ddr: vdd_ddr {
         compatible = "regulator-fixed";
         regulator-name = "vdd_ddr";
-        regulator-min-microvolt = <1350000>;
+        regulator-min-microvolt = <1250000>;
         regulator-max-microvolt = <1350000>;
         regulator-always-on;
     };
