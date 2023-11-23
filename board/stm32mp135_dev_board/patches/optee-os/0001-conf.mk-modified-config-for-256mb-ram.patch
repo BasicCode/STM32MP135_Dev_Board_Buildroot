@@ -1,0 +1,28 @@
+Modify Optee-OS RAM locations in conf.mk to work with 256MB RAM.
+
+diff --git a/core/arch/arm/plat-stm32mp1/conf.mk b/core/arch/arm/plat-stm32mp1/conf.mk
+index 381569e..d4d13d7 100644
+--- a/core/arch/arm/plat-stm32mp1/conf.mk
++++ b/core/arch/arm/plat-stm32mp1/conf.mk
+@@ -234,17 +234,18 @@ $(call force,CFG_DRIVERS_CLK_DT,y)
+ endif
+ 
+ ifneq ($(filter $(CFG_EMBED_DTB_SOURCE_FILE),$(flavorlist-512M)),)
+-CFG_DRAM_SIZE    ?= 0x20000000
++CFG_DRAM_SIZE    ?= 0x10000000
+ endif
+ 
+ CFG_DRAM_BASE    ?= 0xc0000000
+-CFG_DRAM_SIZE    ?= 0x40000000
++CFG_DRAM_SIZE    ?= 0x10000000
+ ifeq ($(CFG_STM32MP15)-$(CFG_WITH_PAGER),y-y)
+ CFG_TZSRAM_START ?= 0x2ffc0000
+ CFG_TZSRAM_SIZE  ?= 0x0003f000
+ endif #CFG_STM32MP15 && CFG_WITH_PAGER
+-CFG_TZDRAM_SIZE  ?= 0x02000000
++CFG_TZDRAM_SIZE  ?= 0x1e00000 # 0x02000000
+ CFG_TZDRAM_START ?= ($(CFG_DRAM_BASE) + $(CFG_DRAM_SIZE) - $(CFG_TZDRAM_SIZE))
++CFG_SHMEM_START  ?= ($(CFG_TZDRAM_START) - $(CFG_SHMEM_SIZE))
+ 
+ # Remoteproc early TA for coprocessor firmware management
+ CFG_RPROC_PTA ?= n

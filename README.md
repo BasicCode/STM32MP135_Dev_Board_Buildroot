@@ -25,7 +25,7 @@ TODO: Add PCB Design Files
 * Some other files in the **overlay** folder are just to override defaults or test features but are not strictly required. 
 
 ## Usage
-This *should* behave like any external buildroot tree. General steps for use:
+Use like any external buildroot tree:
 * Clone this repository, as well as Buildroot.
 * In the **Buildroot** directory, create a config file based on this external tree:
 ```
@@ -37,20 +37,17 @@ BR2_EXTERNAL=../STM32MP135_Dev_Board_Buildroot make stm32mp135_dev_board_defconf
 * Use **dd**, **Rufus**, or your software of choice to image an SD card with the *output/images/sdcard.img* file.
 
 ## Issues
-* After an initial build, on first boot, you will get errors about Optee Header location:
+* A patch is included to modify the *conf.mk* file in *output/build/optee-os-custom/core/arch/arm/plat-stm32mp1* to support 256MB RAM. Further information on the process is described by STM [here](https://wiki.stmicroelectronics.cn/stm32mpu/wiki/How_to_configure_a_256MB_DDR_mapping_from_STM32_MPU_Distribution_Package). If you're getting errors about things being in the wrong memory location it could be a related issue.
 ```
 WARNING: The load address in optee header 0xce000000 - 0xce081310 is not in reserved area: 0xce200000 - 0xd0000000.
 ERROR:   OPTEE header parse error.
 ```
-Modify / replace the *conf.mk* file in *output/build/optee-os-custom/core/arch/arm/plat-stm32mp1* to support 256MB RAM. A replacement file is included (*conf.mk.new*). Further information on the process is described by STM [here](https://wiki.stmicroelectronics.cn/stm32mpu/wiki/How_to_configure_a_256MB_DDR_mapping_from_STM32_MPU_Distribution_Package).
   
 * There is a problem with the PCM3060 driver reporting which format the codec supports. Although it seems to be correct, it doesn't seem to work and was giving an error:
 ```
 44004000.audio-controller-pcm3060-dac: ASoC: pcm3060-dac <-> 44004000.audio-controller No matching formats
 ```
-As a workaround modify the file *linux-custom/sound/soc/codecs/pcm3060.c* on line 191 change the *.format* to ```SNDRV_PCM_FMTBIT_S32_LE```. TODO: Create a patch file for this.
-  
-* TODO: The LTDC LCD output is not yet configured.
+A patch is included to modify *linux-custom/sound/soc/codecs/pcm3060.c* on line 189, and change the *.format* to ```SNDRV_PCM_FMTBIT_S32_LE```. TODO: Create a patch file for this.
 
 ### The Overlay Folder
 There are a few config files in the overlay file for either quality of life, or to make things actually work. Most are optional depending, or may even conflict with your desired settings.
@@ -83,4 +80,4 @@ Where the *u-boot.bin*, and *u-boot.dtb* files are found in the *buildroot/outpu
 
 * The WiFi was getting buffer errors when the SPI bus was running at 42MHz. It seems to be fine at 24MHz, it might be able to run a bit quicker but I haven't tried yet.
 
-* The **/etc/X11/xinit/xinitrc** file, by default, opens several xterm windows and starts a window manager. You may want to check and modify the last few lines of this file to suit your needs.
+* The */etc/X11/xinit/xinitrc* file, by default, opens several xterm windows and starts a window manager. You may want to check and modify the last few lines of this file to suit your needs.
