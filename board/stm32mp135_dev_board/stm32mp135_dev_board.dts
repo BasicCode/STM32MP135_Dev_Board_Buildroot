@@ -193,13 +193,13 @@
 		};
 	};
 
+
+	/*
+	* The Wifi_UP pin must be held HIGH for the chip to turn on,
+	* even when power saving is disableld.
+	*/
 	led{
 		compatible = "gpio-leds";
-
-		/*
-		 * The Wifi_UP pin must be held HIGH for the chip to turn on,
-		 * even when power saving is disableld.
-		 */
 		wifi_up{
 			label = "wifi_up";
 			gpios = <&gpioe 10 GPIO_ACTIVE_HIGH>;
@@ -575,7 +575,7 @@
 		//wakeup-gpios = <&gpioe 10 (GPIO_ACTIVE_LOW)>;
 		reset-gpios = <&gpioc 13 GPIO_ACTIVE_LOW>;
 		reg = <0>; //CS index 0 (see above)
-		spi-max-frequency = <24000000>;
+		spi-max-frequency = <26000000>;
 	};
 };
 

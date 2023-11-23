@@ -52,12 +52,11 @@ A patch is included to modify *linux-custom/sound/soc/codecs/pcm3060.c* on line 
 ### The Overlay Folder
 There are a few config files in the overlay file for either quality of life, or to make things actually work. Most are optional depending, or may even conflict with your desired settings.
 * **/boot/extlinux.conf** - Required to boot linux. U-Boot will look for this.
-* **/etc/init.d/S40xorg** - A dummy file to overwrite a default which is creatred when Xorg compiles. I don't want Xorg to start on boot.
+* **/etc/init.d/S40xorg** - A dummy file to overwrite a default which is creatred when Xorg compiles.
 * **/etc/opkg/distfeeds.conf** - Contains OpenWRT package feed. Need to force it to search the correct architecture when using opkg.
-* **/etc/wpa_supplicant/wpa_cupplicant.conf** - A blank *wpa_supplicant* configuration to fill out.
 * **/etc/X11/xorg.conf** - Sometimes the default are bad, sometimes they aren't.
 * **/etc/directfbrc** - DirectFB config file because it doesn't seem to use FBDev by default, even though it says it does.
-* **/lib/firmwmare** - Firmware files for some wifi cards. [SiliconLabs GitHub](https://github.com/SiliconLabs/wfx-firmware).
+* **/lib/firmwmare/wfx** - Firmware files for some wifi cards. [SiliconLabs GitHub](https://github.com/SiliconLabs/wfx-firmware).
 * **/root** - Just some extra files for testing and playing with.
 
 ## Trips and Tricks
