@@ -572,7 +572,7 @@
 	wifi@0 {
 		compatible = "silabs,wf200";
 		interrupts-extended = <&gpioi 0 IRQ_TYPE_EDGE_RISING>;
-		//wakeup-gpios = <&gpioe 10 (GPIO_ACTIVE_LOW)>;
+		//wakeup-gpios = <&gpioe 10 (GPIO_ACTIVE_HIGH)>;
 		reset-gpios = <&gpioc 13 GPIO_ACTIVE_LOW>;
 		reg = <0>; //CS index 0 (see above)
 		spi-max-frequency = <26000000>;
