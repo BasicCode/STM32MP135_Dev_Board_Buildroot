@@ -1,44 +1,21 @@
-// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-3-Clause)
-/*
- * Copyright (C) 2023, STMicroelectronics - All Rights Reserved
- * Author: STM32CubeMX code generation for STMicroelectronics.
- */
 
-/* For more information on Device Tree configuration, please refer to
- * https://wiki.st.com/stm32mpu/wiki/Category:Device_tree_configuration
- */
 
-#define DDR_SIZE	0x10000000 /* 256MB */
-//#include "stm32mp13-fw-config.dtsi"
-//#include "stm32mp13-fw-config-mem-encrypt.dtsi"
-
-// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-/*
- * Copyright (c) 2022, STMicroelectronics - All Rights Reserved
- */
 
 #include <common/tbbr/tbbr_img_def.h>
 #include <dt-bindings/soc/stm32mp13-tzc400.h>
 
 #include <platform_def.h>
 
+#define DDR_SIZE	0x10000000 /* 256MB */
+
 #ifndef DDR_SIZE
 #error "DDR_SIZE is not defined"
 #endif
 
-/*
-#define DDR_NS_BASE	STM32MP_DDR_BASE
-#define DDR_SEC_SIZE	STM32MP_DDR_S_SIZE
-#define DDR_SEC_BASE	(STM32MP_DDR_BASE + (DDR_SIZE - DDR_SEC_SIZE))
-#define DDR_NS_SIZE	(DDR_SEC_BASE - DDR_NS_BASE)
-*/
-
-#define DDR_NS_BASE 0xc0000000 // (default OpenSTLinux RAM mapping)
-#define DDR_SEC_SIZE 0x01e00000 // (30 MB allocated to OP-TEE).
-#define DDR_SEC_BASE 0xce200000
-#define DDR_SHARE_SIZE 0x00200000 // (2 MB allocated for Share memory)
-#define DDR_SHARE_BASE 0xce000000
-#define DDR_NS_SIZE 0x0e000000 // (224MB dedicated to no secure world)
+#define DDR_NS_BASE     0xc0000000
+#define DDR_NS_SIZE     0x0e000000
+#define DDR_SEC_SIZE    0x02000000
+#define DDR_SEC_BASE    0xce000000
 
 /dts-v1/;
 
@@ -72,3 +49,5 @@
 			DDR_SEC_BASE DDR_SEC_SIZE TZC_REGION_S_RDWR 0>;
 	};
 };
+
+#include "stm32mp13-fw-config-mem-encrypt.dtsi"
