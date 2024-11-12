@@ -29,14 +29,6 @@
 	chosen {
 		stdout-path = "serial0:115200n8";
 	};
-/*
-	magic_wol: magic_wol {
-		compatible = "st,stm32mp1,pwr-irq-user";
-		wakeup-parent = <&pwr_irq>;
-		st,wakeup-pin-number = <2>;
-		status = "okay";
-	};
-*/
 
 	memory@c0000000 {
 		device_type = "memory";
@@ -233,25 +225,6 @@
 		DECPROT(STM32MP1_ETZPC_VREFBUF_ID, DECPROT_NS_RW, DECPROT_UNLOCK)
 	>;
 };
-
-/*
-&gpiob {
-	st,protreg = < (TZPROT(9)) >;
-};
-
-&gpiod {
-	st,protreg = < (TZPROT(7)) >;
-};
-
-&gpioe {
-	//st,protreg = < (TZPROT(15)) >;
-};
-
-&gpioi {
-	st,protreg = < (TZPROT(2)|TZPROT(3)) >;
-};
-
-*/
 
 &hash {
 	status = "okay";
