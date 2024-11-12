@@ -162,6 +162,7 @@
         regulator-always-on;
     };
 	
+	/*
 	wake_up {
 		compatible = "gpio-keys";
 		status = "okay";
@@ -173,6 +174,7 @@
 			status = "okay";
 		};
 	};
+	*/
 
 	clocks{
 
@@ -399,17 +401,13 @@
 
 &crc1{
 	status = "okay";
-
-	/* USER CODE BEGIN crc1 */
-	/* USER CODE END crc1 */
 };
+
 
 &cryp{
 	status = "okay";
-
-	/* USER CODE BEGIN cryp */
-	/* USER CODE END cryp */
 };
+
 
 &dma1{
 	status = "okay";
@@ -525,7 +523,7 @@
 	/* USER CODE END mdma */
 };
 
-/*
+
 &rcc {
 	status = "okay";
 };
@@ -537,7 +535,7 @@
 	status = "okay";
 	st,lsco = <RTC_OUT2_RMP>;
 };
-*/
+
 
 
 &sdmmc1{
@@ -628,6 +626,6 @@
 
 &arm_wdt{
 	timeout-sec = <32>;
-	status = "okay";
+	status = "disabled";
 };
 

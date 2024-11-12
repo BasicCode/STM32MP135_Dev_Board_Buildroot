@@ -50,4 +50,4 @@
 	};
 };
 
-#include "stm32mp13-fw-config-mem-encrypt.dtsi"
+//#include "stm32mp13-fw-config-mem-encrypt.dtsi"

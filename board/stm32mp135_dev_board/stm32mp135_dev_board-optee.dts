@@ -29,13 +29,14 @@
 	chosen {
 		stdout-path = "serial0:115200n8";
 	};
-
+/*
 	magic_wol: magic_wol {
 		compatible = "st,stm32mp1,pwr-irq-user";
 		wakeup-parent = <&pwr_irq>;
 		st,wakeup-pin-number = <2>;
 		status = "okay";
 	};
+*/
 
 	memory@c0000000 {
 		device_type = "memory";
@@ -158,15 +159,6 @@
         regulator-max-microvolt = <1800000>;
         regulator-always-on;
     };
-
-	typec_wakeup: typec_wakeup {
-		compatible = "st,stm32mp1,pwr-irq-user";
-		wakeup-parent = <&pwr_irq>;
-		/* Alert pin on PI2, wakeup_pin_5 */
-		st,wakeup-pin-number = <5>;
-		st,notif-it-id = <1>;
-		status = "okay";
-	};
 };
 
 
@@ -242,6 +234,7 @@
 	>;
 };
 
+/*
 &gpiob {
 	st,protreg = < (TZPROT(9)) >;
 };
@@ -257,6 +250,8 @@
 &gpioi {
 	st,protreg = < (TZPROT(2)|TZPROT(3)) >;
 };
+
+*/
 
 &hash {
 	status = "okay";
@@ -458,11 +453,13 @@
 	st,clk_opp {
 		/* CK_MPU clock config for MP13 */
 		st,ck_mpu {
+			
  			cfg_1 {
  				hz = < 1000000000 >;
  				st,clksrc = < CLK_MPU_PLL1P >;
  				st,pll = < &pll1_cfg2 >;
  			};
+			
  			cfg_2 {
  				hz = < 650000000 >;
  				st,clksrc = < CLK_MPU_PLL1P >;
@@ -529,26 +526,6 @@
 	vddsd2-supply = <&vdd>;
 };
 
-&tamp {
-	status = "okay";
-	st,tamp_passive_nb_sample = <4>;
-	st,tamp_passive_sample_clk_div = <16384>;
-	wakeup-source;
-	wakeup-parent = <&exti>;
-
-
-	tamp_passive@2 {
-		pinctrl-0 = <&tamp0_in2_pin_a>;
-		status = "okay";
-	};
-
-	/* Connect pin8 and pin22 from CN8 */
-	tamp_active@1 {
-		pinctrl-0 = <&tamp0_in3_pin_a &tamp0_out1_pin_a>;
-		status = "disabled";
-	};
-};
-
 &timers12 {
 	status = "okay";
 
@@ -565,8 +542,4 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart4_pins_a>;
 	status = "okay";
-};
-
-&wakeup_pin_5 {
-	bias-pull-up;
 };
