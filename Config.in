@@ -1,0 +1,2 @@
+# ESP8089 WiFi Chipset
+source "$BR2_EXTERNAL_STM32MP135_Dev_Board_Buildroot_PATH/package/esp8089/Config.in"

@@ -222,12 +222,24 @@
 		};
 
 		simple-audio-card,codec {
-			sound-dai = <&pcm3060>;
+			sound-dai = <&nau8822>;
 			clocks = <&i2s1>;
 		};
 	};
 
+	/*
+	* Battery
+	*/
+	bat: battery {
+		compatible = "simple-battery";
+		constant-charge-current-max-microamp = <2040000>;
+		constant-charge-voltage-max-microvolt = <4352000>;
+		precharge-current-microamp = <180000>;
+		charge-term-current-microamp = <180000>;
+	};
+
 }; /*root*/
+
 
 &pinctrl {
 	ltdc_pins_mx: ltdc_mx-0 {
@@ -440,26 +452,40 @@
 	/*
 	 * Audio
 	*/
-	pcm3060: pcm3060@46 {
-		compatible = "ti,pcm3060";
-		reg = <0x46>;
-		clocks = <&i2s1>;     // The codec is a consumer of I2S1 master clock
-		clock-names = "MCLK"; // Feed MCLK codec clock with I2S1 master clock provider
-		ti,out-single-ended = "true";
-		#sound-dai-cells = <0>;
-		status = "okay";
-
+	nau8822: nau8822@1a {
+		compatible = "nuvoton,nau8822";
+		reg = <0x1a>;
+        clocks = <&i2s1>; // The codec is a consumer of I2S1 master clock
+		clock-names = "mclk"; // Feed MCLK codec clock with I2S1 master clock provider
+		#sound-dai-cells = <1>;
+		
 		ports {
 			#address-cells = <1>;
 			#size-cells = <0>;
 
 			port@0 {
 				reg = <0>;
-				pcm3060_endpoint: endpoint {
+				nau88c22_endpoint: endpoint {
 					remote-endpoint = <&i2s1_endpoint>;
 				};
 			};
 		};
+    };
+
+	/*
+	 * BQ256xx power path module
+	 */
+	charger@6a {
+		compatible = "ti,bq25619";
+		reg = <0x6a>;
+		monitored-battery = <&bat>;
+
+		//interrupt-parent = <&power_int>;
+		interrupts = <&gpioi 2 IRQ_TYPE_EDGE_FALLING>;
+		ti,watchdog-timeout-ms = <40000>;
+
+		input-voltage-limit-microvolt = <4500000>;
+		input-current-limit-microamp = <2400000>;
 	};
 };
 
@@ -470,7 +496,7 @@
 	pinctrl-0 = <&i2s1_pins_mx>;
 	pinctrl-1 = <&i2s1_sleep_pins_mx>;
 	#clock-cells = <0>; // Set I2S1 as master clock provider
-	#sound-dai-cells = <0>;
+	#sound-dai-cells = <1>;
 	status = "okay";
 
 	i2s1_port: port {
@@ -478,7 +504,7 @@
         #size-cells = <0>;
 		
 		i2s1_endpoint: endpoint {
-			remote-endpoint = <&pcm3060_endpoint>;
+			remote-endpoint = <&nau88c22_endpoint>;
 			system-clock-direction-out;
 			frame-master;
 			bitclock-master;
@@ -488,6 +514,10 @@
 	};
 };
 
+
+/*
+ * Display
+ */
 &ltdc{
 	pinctrl-names = "default", "sleep";
 	pinctrl-0 = <&ltdc_pins_mx>;
@@ -560,24 +590,27 @@
 /*
  * WiFi
  */
- /*
 &spi5 {
 	pinctrl-names = "default", "sleep";
 	pinctrl-0 = <&spi5_pins_mx>;
 	pinctrl-1 = <&spi5_sleep_pins_mx>;
-	cs-gpios= <&gpioe 8 GPIO_ACTIVE_LOW>; //PE8 = CS for WiFi
+	//cs-gpios= <&gpioe 8 GPIO_ACTIVE_LOW>; //PE8 = CS for WiFi
 	status = "okay";
 
-	wifi@0 {
-		compatible = "silabs,wf200";
-		interrupts-extended = <&gpioi 0 IRQ_TYPE_EDGE_RISING>;
-		//wakeup-gpios = <&gpioe 10 (GPIO_ACTIVE_HIGH)>;
-		reset-gpios = <&gpioc 13 GPIO_ACTIVE_LOW>;
-		reg = <0>; //CS index 0 (see above)
-		spi-max-frequency = <26000000>;
-	};
+    wifi@0 {
+        compatible = "esp8089";
+        reg = <0>;
+        spi-max-frequency = <10000000>; /* 10 MHz */
+        //interrupts = <23>; /* Interrupt line */
+        vdd-supply = <&vdd>;
+        //reset-gpios = <&gpioc 13 GPIO_ACTIVE_LOW>;
+        //wakeup-gpios = <&gpioe 10 GPIO_ACTIVE_HIGH>;
+		cs = <72>; //PE8 4 * 16 + 8 = 72
+		reset= <46>; //PC13 2 * 16 + 13 = 46
+		interrupt= <128>; //PI0 8 * 16 + 0 = 128
+		debug= <0>;
+    };
 };
-*/
 
 /*
  * USB Configuration

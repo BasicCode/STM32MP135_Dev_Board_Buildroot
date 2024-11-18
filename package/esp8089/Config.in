@@ -1,0 +1,4 @@
+config BR2_PACKAGE_ESP8089
+        bool "esp8089-spi"
+        help
+                Linux kernel module for the ESP8089 WiFi chipset over SPI. (https://github.com/Evlers/esp8089_wifi_drivers)
