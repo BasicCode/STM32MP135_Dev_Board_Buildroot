@@ -176,7 +176,6 @@
 	 */
 	panel {
 		status = "okay";
-		//compatible = "qiaodian,qd43003c0-40", "simple-panel"; // Orient Display 480x272
 		compatible = "pda,91-00156-a0", "simple-panel"; // Orient Display 800x480
 		power-supply = <&vdd>;
 		ports {
@@ -206,24 +205,33 @@
 		};
 	};
 
+	/*
+	 * Sound card
+	 */
 	sound {
 		compatible = "simple-audio-card";
 		simple-audio-card,name = "Sound Card";
 		simple-audio-card,format = "i2s";
 		simple-audio-card,mclk-fs = <256>;
-		status = "okay";
-		simple-audio-card,routing = 
-			"Playback", "DAC";
-		simple-audio-card,widgets =
-			"Headphone", "Headphone Jack";
+        //simple-audio-card,bitclock-master = <&dailink0_master>;
+        //simple-audio-card,frame-master = <&dailink0_master>;
 
-		simple-audio-card,cpu {
-			sound-dai = <&i2s1>;
-		};
+        simple-audio-card,widgets =
+                "Microphone", "Microphone Jack",
+                "Speaker", "External Speaker";
+        simple-audio-card,routing =
+                "Left ADC", "Microphone Jack",
+                "External Speaker", "Right Speaker Out",
+				"External Speaker", "Left Speaker Out";
+
+        simple-audio-card,cpu {
+            sound-dai = <&i2s1>;
+        };
 
 		simple-audio-card,codec {
 			sound-dai = <&nau8822>;
-			clocks = <&i2s1>;
+            clocks = <&i2s1>;
+			clock-names = "mclk";
 		};
 	};
 
@@ -443,9 +451,7 @@
 	pinctrl-0 = <&i2c3_pins_mx>;
 	pinctrl-1 = <&i2c3_sleep_pins_mx>;
 	status = "okay";
-	i2c-scl-rising-time-ns = <96>;
-	i2c-scl-falling-time-ns = <3>;
-	clock-frequency = <400000>;
+	clock-frequency = <100000>;
 	/delete-property/ dmas;
 	/delete-property/ dma-names;
 
@@ -457,7 +463,7 @@
 		reg = <0x1a>;
         clocks = <&i2s1>; // The codec is a consumer of I2S1 master clock
 		clock-names = "mclk"; // Feed MCLK codec clock with I2S1 master clock provider
-		#sound-dai-cells = <1>;
+		#sound-dai-cells = <0>;
 		
 		ports {
 			#address-cells = <1>;
@@ -496,7 +502,7 @@
 	pinctrl-0 = <&i2s1_pins_mx>;
 	pinctrl-1 = <&i2s1_sleep_pins_mx>;
 	#clock-cells = <0>; // Set I2S1 as master clock provider
-	#sound-dai-cells = <1>;
+	#sound-dai-cells = <0>;
 	status = "okay";
 
 	i2s1_port: port {
