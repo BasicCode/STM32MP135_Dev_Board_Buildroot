@@ -42,12 +42,18 @@ BR2_EXTERNAL=../STM32MP135_Dev_Board_Buildroot make stm32mp135_dev_board_defconf
 WARNING: The load address in optee header 0xce000000 - 0xce081310 is not in reserved area: 0xce200000 - 0xd0000000.
 ERROR:   OPTEE header parse error.
 ```
+* NOTE: That it seems as though the NAU88c22 chip will only support I2C bus speeds up to 100khz. Although it will respont to ACK requests at a higher speed, it does not reset properly at this speed.
   
-* There is a problem with the PCM3060 driver reporting which format the codec supports. Although it seems to be correct, it doesn't seem to work and was giving an error:
-```
-44004000.audio-controller-pcm3060-dac: ASoC: pcm3060-dac <-> 44004000.audio-controller No matching formats
-```
-A patch is included to modify *linux-custom/sound/soc/codecs/pcm3060.c* on line 189, and change the *.format* to ```SNDRV_PCM_FMTBIT_S32_LE```. TODO: Create a patch file for this.
+## Bugs and TODO
+* Some sort of soft start or larger capacitor is required across VSYS on BQ256xx chip (https://e2e.ti.com/support/power-management-group/power-management/f/power-management-forum/1021465/faq-why-vsys-does-not-start-up-normally-when-there-is-a-loading-on-the-sys-and-the-battery-is-not-present-for-bq25601-bq25601d-bq25606-bq25611d-bq25616-bq25616j-bq25618-bq25619-bq25600-bq25600d-bq25600c).
+* Extra capacitor across VSYS to help with ripple
+* Add a choke, or something, to help switchmode noise getting back up the power input.
+* Add DC blocking capacitors to speaker outputs
+* MMC CD line is incorrect
+* A better wifi chipset
+* LCD backlight voltage too damn high; change FB resistors (150k, 6.8k seems like a good number).
+* Check if touch panel is even working.
+* Charge and Power LEDs are wrong polarity.
 
 ### The Overlay Folder
 There are a few config files in the overlay file for either quality of life, or to make things actually work. Most are optional depending, or may even conflict with your desired settings.
