@@ -1,0 +1,4 @@
+config BR2_PACKAGE_GDEQ046T82
+        bool "Good Display GDEQ046T82"
+        help
+                Good Display GDEQ046T82 and similar e-ink displays using the SSD1677 controller.

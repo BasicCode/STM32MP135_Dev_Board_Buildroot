@@ -173,7 +173,7 @@
 	
 	/*
 	 * Display
-	 */
+	 *
 	panel {
 		status = "okay";
 		compatible = "pda,91-00156-a0", "simple-panel"; // Orient Display 800x480
@@ -190,6 +190,7 @@
 			};
 		};
 	};
+	*/
 
 
 	/*
@@ -198,11 +199,6 @@
 	*/
 	led{
 		compatible = "gpio-leds";
-		wifi_up{
-			label = "wifi_up";
-			gpios = <&gpioe 10 GPIO_ACTIVE_HIGH>;
-			default-state = "on";
-		};
 	};
 
 	/*
@@ -523,7 +519,7 @@
 
 /*
  * Display
- */
+ *
 &ltdc{
 	pinctrl-names = "default", "sleep";
 	pinctrl-0 = <&ltdc_pins_mx>;
@@ -537,6 +533,7 @@
 		};
 	};
 };
+*/
 
 &mdma{
 	status = "okay";
@@ -594,28 +591,28 @@
 };
 
 /*
- * WiFi
+ * E-Ink Display
  */
 &spi5 {
 	pinctrl-names = "default", "sleep";
 	pinctrl-0 = <&spi5_pins_mx>;
 	pinctrl-1 = <&spi5_sleep_pins_mx>;
-	//cs-gpios= <&gpioe 8 GPIO_ACTIVE_LOW>; //PE8 = CS for WiFi
+	cs-gpios= <&gpioe 8 GPIO_ACTIVE_LOW>; // E-ink CS Line
 	status = "okay";
+	
+	//For some reason DMAs are causing problems with mipi_dsi_command_buf()
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
 
-    wifi@0 {
-        compatible = "esp8089";
-        reg = <0>;
-        spi-max-frequency = <10000000>; /* 10 MHz */
-        //interrupts = <23>; /* Interrupt line */
-        vdd-supply = <&vdd>;
-        //reset-gpios = <&gpioc 13 GPIO_ACTIVE_LOW>;
-        //wakeup-gpios = <&gpioe 10 GPIO_ACTIVE_HIGH>;
-		cs = <72>; //PE8 4 * 16 + 8 = 72
-		reset= <46>; //PC13 2 * 16 + 13 = 46
-		interrupt= <128>; //PI0 8 * 16 + 0 = 128
-		debug= <0>;
-    };
+	display@0 {
+		compatible = "gooddisplay,gdeq046t82";
+		reg = <0>;
+		spi-max-frequency = <10000000>;
+		status = "okay";
+		dc-gpios = <&gpioe 10 GPIO_ACTIVE_HIGH>;
+		res-gpios = <&gpioc 13 GPIO_ACTIVE_HIGH>;
+		busy-gpios = <&gpioi 3 GPIO_ACTIVE_HIGH>;
+	};
 };
 
 /*
