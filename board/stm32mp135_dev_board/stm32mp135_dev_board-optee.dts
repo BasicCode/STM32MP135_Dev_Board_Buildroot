@@ -8,7 +8,6 @@
 
 #include <dt-bindings/clock/stm32mp13-clksrc.h>
 #include <dt-bindings/power/stm32mp1-power.h>
-#include <dt-bindings/random/stm32mp-rng.h>
 #include <dt-bindings/regulator/st,stm32mp13-regulator.h>
 #include <dt-bindings/soc/stm32mp-tzc400-macro.h>
 #include <dt-bindings/soc/stm32mp13-etzpc.h>
@@ -267,7 +266,6 @@
 
 &pwr_irq {
 	pinctrl-names = "default";
-	pinctrl-0 = <&wakeup_pins>;
 	status = "okay";
 };
 
@@ -445,7 +443,6 @@
 &rng {
 	status = "okay";
 	clock-error-detect;
-	st,rng-config = <RNG_CONFIG_NIST_B_ID>;
 };
 
 &rtc {

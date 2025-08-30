@@ -1,0 +1,27 @@
+Modify Optee-OS RAM locations in conf.mk to work with 256MB RAM
+
+diff --git a/core/arch/arm/plat-stm32mp1/conf.mk b/core/arch/arm/plat-stm32mp1/conf.mk
+index 22c7a63..eee2f22 100644
+--- a/core/arch/arm/plat-stm32mp1/conf.mk
++++ b/core/arch/arm/plat-stm32mp1/conf.mk
+@@ -297,17 +297,17 @@ endif
+ $(call force,CFG_STM32MP1_SCMI_SHM_SIZE,0x1000)
+ 
+ ifneq ($(filter $(CFG_EMBED_DTB_SOURCE_FILE),$(flavorlist-512M)),)
+-CFG_DRAM_SIZE    ?= 0x20000000
++CFG_DRAM_SIZE    ?= 0x10000000
+ endif
+ 
+ CFG_DRAM_BASE    ?= 0xc0000000
+-CFG_DRAM_SIZE    ?= 0x40000000
++CFG_DRAM_SIZE    ?= 0x10000000
+ ifeq ($(CFG_STM32MP15)-$(CFG_WITH_PAGER),y-y)
+ CFG_TZSRAM_START ?= 0x2ffc0000
+ CFG_TZSRAM_SIZE  ?= 0x00040000
+ endif #CFG_STM32MP15 && CFG_WITH_PAGER
+ CFG_TZDRAM_SIZE  ?= 0x02000000
+-CFG_TZDRAM_START ?= ($(CFG_DRAM_BASE) + $(CFG_DRAM_SIZE) - $(CFG_TZDRAM_SIZE))
++CFG_TZDRAM_START ?= 0xce000000
+ 
+ CFG_STM32_BSEC ?= y
+ CFG_STM32_CLKCALIB ?=y
