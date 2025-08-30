@@ -16,9 +16,9 @@ TODO: Add PCB Design Files
 
 ## Current State
 * Uses Linux kernel v6.1 (from STM)
-* Uses U-Boot 2023.07 (from STM)
-* Uses TF-A v2.8 (from STM)
-* Uses Optee-Os v3.19.0 (from STM)
+* Uses U-Boot 2023.10 (from STM)
+* Uses TF-A v2.1 (from STM)
+* Uses Optee-Os v4.0.0 (from STM)
 * Tested with Buildroot 2023.05
 * Uses mainline STM32 dtsi where possible, however some of the dt-bindings for the STM32MP135 have not made it to the mainline u-boot and Linux source yet. Fortunately STM provides customised TF-A, Optee, U-Boot, and Linux.
 * Includes a file system overlay with some configuration, but ```boot/extlinux.conf``` is the only file which is actually required.
